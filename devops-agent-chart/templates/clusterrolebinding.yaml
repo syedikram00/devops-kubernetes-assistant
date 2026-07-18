@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "devops-agent-chart.fullname" . }}-rolebinding
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "devops-agent-chart.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: ClusterRole
+  name: {{ include "devops-agent-chart.fullname" . }}-role
+  apiGroup: rbac.authorization.k8s.io

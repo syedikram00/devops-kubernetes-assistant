@@ -1,0 +1,25 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: devops-agent-deployment
+  labels:
+    app: devops-agent
+
+
+spec: 
+  replicas: 2
+  selector:
+    matchLabels:
+      app: devops-agent
+  template:
+    metadata:
+      labels: 
+        app: devops-agent
+    spec:
+      serviceAccountName: devops-agent-sa
+      containers:
+        - name: devops-agent
+          image: ikramsyed/devops-agent:v1.0
+          env:
+            - name: OLLAMA_URL
+              value: http://172.18.0.1:11434
