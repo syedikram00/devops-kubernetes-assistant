@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import requests
 import json
+import os
 
 from app.tools import AVAILABLE_FUNCTIONS, TOOLS
 
@@ -12,7 +13,8 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-OLLAMA_URL = "http://localhost:11434/api/chat"
+OLLAMA_HOST = os.getenv("OLLAMA_URL", "http://localhost:11434")
+OLLAMA_CHAT_URL = f"{OLLAMA_HOST}/api/chat"
 MODEL_NAME = "qwen3:latest"
 
 class PromptRequest(BaseModel):
@@ -55,7 +57,7 @@ def ask(request: PromptRequest):
     {"role": "user", "content": request.prompt}
 ]
 
-    response = requests.post(OLLAMA_URL, json={
+    response = requests.post(OLLAMA_CHAT_URL, json={
     "model": MODEL_NAME,
     "messages": messages,
     "tools": TOOLS,
@@ -83,7 +85,7 @@ def ask(request: PromptRequest):
         messages.append({"role": "assistant", "content": "", "tool_calls": [tool_call]})
         messages.append({"role": "tool", "content": str(function_result)})
 
-        final_response = requests.post(OLLAMA_URL, json={"model": MODEL_NAME, "messages": messages, "stream": False,"options": {"num_predict": 1024} })
+        final_response = requests.post(OLLAMA_CHAT_URL, json={"model": MODEL_NAME, "messages": messages, "stream": False,"options": {"num_predict": 1024} })
         final_result = final_response.json()
         return {"answer": final_result["message"]["content"]}
 
