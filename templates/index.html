@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DevOps Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="topbar"><div class="topbar-inner"><span class="brand">DevOps Assistant</span></div></div>
+    <div class="container">
+        <div id="chat" class="chat-window">
+            <div class="message assistant">Ask me about your cluster — pods, logs, deployments, services.</div>
+        </div>
+        <form id="chat-form" class="chat-form">
+            <input type="text" id="prompt-input" placeholder="e.g. Why is my-pod crashing?" autocomplete="off" required>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+    <script>
+        const form = document.getElementById('chat-form');
+        const input = document.getElementById('prompt-input');
+        const chat = document.getElementById('chat');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const prompt = input.value;
+            addMessage(prompt, 'user');
+            input.value = '';
+            const loadingMsg = addMessage('Thinking...', 'assistant');
+
+            try {
+                const res = await fetch('/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt })
+                });
+                const data = await res.json();
+                loadingMsg.textContent = data.answer;
+            } catch (err) {
+                loadingMsg.textContent = 'Error reaching the assistant.';
+            }
+        });
+
+        function addMessage(text, role) {
+            const div = document.createElement('div');
+            div.className = `message ${role}`;
+            div.textContent = text;
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
+            return div;
+        }
+    </script>
+</body>
+</html>
