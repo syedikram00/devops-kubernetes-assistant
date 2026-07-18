@@ -69,12 +69,26 @@ def get_services():
         })
     return {"services": services}
 
+def get_nodes():
+    output = run_kubectl(["get", "nodes", "-o", "json"])
+    if isinstance(output, dict):
+        return output
+    data = json.loads(output)
+    nodes = []
+    for item in data.get("items", []):
+        conditions = item["status"].get("conditions", [])
+        ready = next((c["status"] for c in conditions if c["type"] == "Ready"), "Unknown")
+        nodes.append({"name": item["metadata"]["name"], "ready": ready})
+    return {"nodes": nodes}
+
+
 AVAILABLE_FUNCTIONS = {
     "get_pods": get_pods,
     "get_logs": get_logs,
     "describe_pod": describe_pod,
     "get_deployments": get_deployments,
     "get_services": get_services,
+    "get_nodes" : get_nodes,
 }
 
 TOOLS = [
@@ -83,4 +97,5 @@ TOOLS = [
     {"type": "function", "function": {"name": "describe_pod", "description": "Get detailed description/events for a pod, useful for diagnosing crashes", "parameters": {"type": "object", "properties": {"pod_name": {"type": "string"}}, "required": ["pod_name"]}}},
     {"type": "function", "function": {"name": "get_deployments", "description": "List deployments with replica counts", "parameters": {"type": "object", "properties": {}}}},
     {"type": "function", "function": {"name": "get_services", "description": "List services with type and cluster IP", "parameters": {"type": "object", "properties": {}}}},
+    {"type": "function", "function": {"name": "get_nodes", "description": "List all cluster nodes and whether each is Ready", "parameters": {"type": "object", "properties": {}}}},
 ]
