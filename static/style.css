@@ -1,13 +1,173 @@
 * { box-sizing: border-box; }
-body { font-family: 'Inter', -apple-system, sans-serif; background: #f6f7f9; margin: 0; color: #1a1d23; }
-.topbar { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 18px 0; }
-.topbar-inner { max-width: 700px; margin: 0 auto; padding: 0 24px; }
-.brand { font-size: 18px; font-weight: 700; }
-.container { max-width: 700px; margin: 0 auto; padding: 24px; display: flex; flex-direction: column; height: calc(100vh - 90px); }
-.chat-window { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 8px 0; }
-.message { padding: 10px 14px; border-radius: 10px; max-width: 80%; font-size: 14px; line-height: 1.5; white-space: pre-wrap; }
-.message.user { background: #1a1d23; color: white; align-self: flex-end; }
-.message.assistant { background: #fff; border: 1px solid #e5e7eb; align-self: flex-start; }
-.chat-form { display: flex; gap: 10px; padding-top: 14px; }
-.chat-form input { flex: 1; padding: 12px 14px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 14px; font-family: inherit; }
-.chat-form button { background: #1a1d23; color: white; border: none; padding: 12px 22px; border-radius: 8px; font-weight: 600; cursor: pointer; font-family: inherit; }
+
+body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #1a1d24;
+    margin: 0;
+    color: #e5e7eb;
+}
+
+.topbar {
+    background: #20242e;
+    border-bottom: 1px solid #2d323d;
+    padding: 16px 0;
+}
+
+.topbar-inner {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.brand-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 8px #22c55e;
+}
+
+.brand-text {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #f9fafb;
+}
+
+.brand-tag {
+    font-size: 12px;
+    color: #8b92a3;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+.container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 65px);
+}
+
+.chat-window {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 8px 4px;
+}
+
+.message {
+    padding: 12px 16px;
+    border-radius: 12px;
+    max-width: 82%;
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    position: relative;
+}
+
+.msg-label {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.55;
+    margin-bottom: 4px;
+}
+
+.message.user {
+    background: #2563eb;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+.message.assistant {
+    background: #242832;
+    border: 1px solid #323844;
+    border-left: 3px solid #2563eb;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+}
+
+.message.assistant .msg-label {
+    color: #60a5fa;
+    opacity: 0.9;
+}
+
+.message.loading .msg-body {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.message.loading .msg-body::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #8b92a3;
+    animation: pulse 1s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+.chat-form {
+    display: flex;
+    gap: 10px;
+    padding-top: 16px;
+}
+
+.chat-form input {
+    flex: 1;
+    padding: 13px 16px;
+    border-radius: 10px;
+    border: 1px solid #323844;
+    background: #242832;
+    color: #e5e7eb;
+    font-size: 14px;
+    font-family: inherit;
+}
+
+.chat-form input::placeholder {
+    color: #8b92a3;
+}
+
+.chat-form input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+.chat-form button {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 13px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s ease;
+}
+
+.chat-form button:hover {
+    background: #1d4ed8;
+}
